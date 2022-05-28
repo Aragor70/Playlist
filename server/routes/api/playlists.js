@@ -5,26 +5,25 @@ const router = express.Router();
 const playlistController = new PlaylistController;
 
 
-//route GET    api/songs/
-//description  Get the songs with a filtering
+//route GET    api/playlists/
+//description  Get the playlists with a filtering
 router.get('/', playlistController.getPlaylists);
 
-//route POST    api/songs/
-//description   Create a new song
+//route GET    api/playlists/:id
+//description  Get the playlist by id
+router.get('/:id', playlistController.getPlaylist);
+
+//route POST    api/playlists/
+//description   Create a new playlist
 router.post('/', playlistController.createPlaylist);
 
-/* //route GET    api/songs/:id
-//description  Get the song by id
-router.get('/:id', songController.getTask);
+//route DELETE  api/playlists/:id
+//description   Delete playlist by id
+router.delete('/:id', playlistController.deletePlaylist);
 
+//route PUT     api/playlists/
+//description   Include a song into playlist or update playlist title
+router.put('/:id', playlistController.editPlaylist);
 
-
-//route PUT    api/songs/:id
-//description  Update song by id
-router.put('/:id', songController.updateTask);
-
-//route DELETE  api/songs/:id
-//description   Delete song by id
-router.delete('/:id', songController.deleteTask); */
 
 module.exports = router

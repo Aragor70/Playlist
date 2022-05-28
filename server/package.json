@@ -4,7 +4,8 @@
   "description": "Playlist web application.",
   "main": "server.js",
   "keywords": [
-    "Playlist", "Ed Sheeran"
+    "Playlist",
+    "Ed Sheeran"
   ],
   "author": "mikey.prus@gmail.com",
   "license": "MIT",
