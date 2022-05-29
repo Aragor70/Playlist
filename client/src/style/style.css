@@ -6,3 +6,52 @@
   font-size: 21px;
   letter-spacing: 0.6px;
 }
+
+ion-icon {
+  min-height: 45px;
+  min-inline-size: 35px;
+}
+ion-row {
+  gap: 15px;
+}
+
+ion-footer {
+  background-color: #fafafa;
+}
+
+.dark ion-footer {
+  
+  background-color: #4d4d4d;
+}
+.dark ion-footer  {
+  
+  color: #fafafa;
+}
+
+.l-grey-bcg {
+  border-bottom: 3px solid #4d4d4d;
+}
+
+.dark .l-grey-bcg {
+  border-bottom: 3px solid #4d4d4d;
+}
+ion-grid {
+  width: 100%;
+}
+ion-list.cards {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+ion-input[type="text"] {
+  border-bottom: 1px solid #4d4d4d;
+}
+ion-col {
+  display: flex;
+  align-items: center;
+}
+ion-col h1 {
+  font-weight: 900;
+  text-transform: capitalize;
+}

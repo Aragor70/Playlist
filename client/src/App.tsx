@@ -22,6 +22,8 @@ import '@ionic/react/css/display.css';
 /* Theme variables */
 import './theme/variables.css';
 import './style/style.css';
+import ListingPage from './pages/ListingPage';
+import SinglePage from './pages/SinglePage';
 
 setupIonicReact();
 
@@ -31,6 +33,24 @@ const App: React.FC = () => (
       <IonRouterOutlet>
         <Route exact path="/home">
           <Home />
+        </Route>
+        <Route exact path="/playlists">
+          <ListingPage />
+        </Route>
+        <Route exact path="/playlists/:id">
+          <SinglePage />
+        </Route>
+        <Route exact path="/authors">
+          <ListingPage />
+        </Route>
+        <Route exact path="/authors/:id">
+          <SinglePage />
+        </Route>
+        <Route exact path="/songs">
+          <ListingPage />
+        </Route>
+        <Route exact path="/songs/:id">
+          <SinglePage />
         </Route>
         <Route exact path="/">
           <Redirect to="/home" />

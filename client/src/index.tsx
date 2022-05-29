@@ -5,7 +5,7 @@ import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 import reportWebVitals from './reportWebVitals';
 
 
-ReactDOM.hydrate(
+ReactDOM.render(
   <React.StrictMode>
     <App />
   </React.StrictMode>,

@@ -17,7 +17,7 @@ require('./config/db');
 
 app.use(express.json({ extended: false }))
 
-app.use(express.static('../client/build'))
+/* app.use(express.static('../client/build')) */
 
 app.get('/', (req, res) => {
 
@@ -29,9 +29,9 @@ const songs = app.use("/api/songs", songsRouter);
 const authors = app.use("/api/authors", authorsRouter);
 const playlists = app.use("/api/playlists", playlistsRouter);
 
-app.get('*', (req, res) => {
+/* app.get('*', (req, res) => {
   res.sendFile(path.resolve(__dirname, '../client', 'build', 'index.html'))
-})
+}) */
 
 app.use(errorHandler)
 

@@ -76,6 +76,20 @@ http://ionicframework.com/docs/theming/ */
   --ion-color-light-tint: #f5f6f9;
 }
 
+ion-content {
+  --ion-background-color: #fafafa;
+}
+ion-header {
+  --ion-background-color: #fafafa;
+}
+
+.dark ion-content {
+  --ion-background-color: unset;
+}
+.dark ion-header {
+  --ion-background-color: unset;
+}
+
 @media (prefers-color-scheme: dark) {
   /*
    * Dark Colors
@@ -464,17 +478,30 @@ ion-item
 --padding-start: 16px!important;
 }
 ion-list{
-padding: 0 16px !important; 
+padding: 20px !important; 
 }
 ion-list-header
 {
 padding: 0 !important; 
 }
+ion-card
+{
+padding: 0;
+margin: 0 !important;
+}
+@media (min-width: 768px) {
+  
+  ion-card
+  {
+    padding: 40px;
+    margin: 0 !important;
+  }
+}
 ion-card ion-card
 {
 margin: 0 !important;
 }
-ion-list ion-list
+ion-list ion-list ion-list
 {
 padding: 0 !important;
 }
@@ -564,4 +591,25 @@ img
 {
   max-width: 100%;
   max-height: 100%;
+}
+
+ion-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 2.5px;
+  border-bottom: 1px solid #121212;
+}
+
+ion-grid ion-grid {
+  
+  border: none;
+}
+
+ion-content > * {
+  max-width: 1024px !important;
+  margin: 0 auto !important;
+}
+ion-header > * {
+  max-width: 1024px !important;
+  margin: 0 auto !important;
 }

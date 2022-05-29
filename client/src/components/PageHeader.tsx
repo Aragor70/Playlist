@@ -35,7 +35,7 @@ const PageHeader: React.FC<RouteComponentProps | any> = ({ history }) => {
 
   return (
       <IonHeader>
-        <IonItem mode="md">
+        <IonItem lines="none" mode="md">
           <IonTitle className="no-padding"><span onClick={() => history.push("/")} className="brand-icon">Playlist</span></IonTitle>
           
             <IonIcon icon={isDarkMode ? sunny : moon} onClick={() => handleToggle()} slot="end"></IonIcon>
