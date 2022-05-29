@@ -95,7 +95,7 @@ class PlaylistController {
 
         await this.helpers.sanitize(id, /\d+/)
 
-        const playlist = await models.Playlist.findByPk(id, { include: { model: models.Song, through: { model: models.SongPlaylist } } })
+        let playlist = await models.Playlist.findByPk(id, { include: { model: models.Song, through: { model: models.SongPlaylist } } })
 
         if (!playlist) return next(new ErrorResponse('Playlist does not exist.', 404));
         
@@ -123,6 +123,7 @@ class PlaylistController {
                 }
             })
         }
+        playlist = await models.Playlist.findByPk(id, { include: { model: models.Song, through: { model: models.SongPlaylist } } })
 
 
         return res.status(201).json({

@@ -45,25 +45,24 @@ const Filter: React.FC<ContainerProps> = ({ setArray, setLoading, pageInfo = '' 
         
         <IonRow>
             <IonCol>
-                Filter
+                <IonText className='extra-bold'>Filter</IonText>
             </IonCol>
         </IonRow>
         <IonRow>
             <IonCol>
                 <IonLabel>
-                    <span>Title</span>
-                    <IonInput name='phrase' placeholder="Search by phrase" ref={phrase} type='text' onIonChange={(e: any) => handleChange(e)}></IonInput>
+                    <IonInput name='phrase' value={formData?.phrase || ""} placeholder="Search by phrase" ref={phrase} type='text' onIonChange={(e: any) => handleChange(e)}></IonInput>
                 </IonLabel>
             </IonCol>
             <IonCol>
                 <IonLabel>
-                    <span>Uploaded from</span>
+                    <IonText slot='start'>Uploaded from</IonText>
                     <IonInput name='startDate' type='date' onIonChange={(e: any) => handleChange(e)}></IonInput>
                 </IonLabel>
             </IonCol>
             <IonCol>
                 <IonLabel>
-                    <span>Uploaded to</span>
+                    <IonText slot='start'>Uploaded to</IonText>
                     <IonInput name='endDate' type='date' onIonChange={(e: any) => handleChange(e)}></IonInput>
                 </IonLabel>
             </IonCol>

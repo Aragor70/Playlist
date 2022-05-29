@@ -2,7 +2,7 @@ import { IonButton, IonCard, IonCardContent, IonCardHeader, IonCol, IonContent, 
 import { listOutline, musicalNotesOutline, peopleOutline } from 'ionicons/icons';
 import { Fragment, useEffect, useState } from 'react';
 import { withRouter } from 'react-router';
-import { getAll, getOneById } from '../actions/api';
+import { getAll, getOneById, updateById } from '../actions/api';
 import ContentHeadline from '../components/ContentHeadline';
 import EmptyRow from '../components/EmptyRow';
 import ExploreContainer from '../components/ExploreContainer';
@@ -14,12 +14,60 @@ const SinglePage: React.FC = ({ location, match }: any) => {
 
   const [ element, setElement ] = useState<any>(null)
 
-
   const [ loadingData, setLoadingData ] = useState(false)
 
   const [ pageInfo, setPageInfo ] = useState("")
 
-  const [openInclude, setOpenInclude] = useState(false)
+  const [ openInclude, setOpenInclude ] = useState(false)
+
+  const [ allSongs, setAllSongs ] = useState([])
+
+
+  const includeExcludeSong = async (song_id: any, action: string) => {
+    try {
+      
+      setLoadingData(true)
+
+      const payload = { 
+        payload: {
+          id: match.params.id,
+          song_id
+        },
+        action
+      }
+
+      const res = await updateById('playlists', payload)
+
+      const value = res;
+
+      setElement(value.playlist)
+      
+      await loadSongs(false)
+      
+      setLoadingData(false)
+
+    } catch (err: any) {
+      console.log(err.message)
+    }
+  }
+
+
+  const loadSongs = async (isOpen: boolean) => {
+    try {
+
+      setOpenInclude(!isOpen)
+
+      const res = await getAll('songs');
+
+      const values = res?.songs;
+      
+      setAllSongs(values)
+
+      
+    } catch (err: any) {
+      console.log(err.message)
+    }
+  }
 
   useEffect(() => {
 
@@ -34,6 +82,7 @@ const SinglePage: React.FC = ({ location, match }: any) => {
         
         const value = res[path.slice(0, path.length - 1)]
         setElement(value)
+
         setLoadingData(false)
       
     })()
@@ -71,11 +120,11 @@ const SinglePage: React.FC = ({ location, match }: any) => {
                 <IonCardContent>
                   <IonList>
                     {
-                      pageInfo === 'playlists' ? element['Songs']?.map((element: any) => element.title)
+                      pageInfo === 'playlists' ? element['Songs']?.map((element: any) => <IonItem key={element.id}>{element.title}</IonItem>)
 
                       : 
 
-                      pageInfo === 'songs' ? element['Songs']?.map((element: any) => element.title)
+                      pageInfo === 'songs' ? element['Songs']?.map((element: any) => <IonItem key={element.id}>{element.title}</IonItem>)
 
                       : null
 
@@ -87,14 +136,16 @@ const SinglePage: React.FC = ({ location, match }: any) => {
               {
                 (pageInfo === 'playlists') && <Fragment>
 
-                  <IonButton onClick={() => setOpenInclude(!openInclude)}>Include a song</IonButton>
+                  <IonButton onClick={() => loadSongs(openInclude)}>Include a song</IonButton>
 
                 </Fragment>
               }
               {
                 (pageInfo === 'playlists' && openInclude) && <Fragment>
 
-                  ciao
+                  {
+                    allSongs?.map((element: any) => <IonItem key={element.id}>{element.title}{!!element?.Playlists?.filter((elem: any) => elem?.id === parseInt(match?.params?.id))[0] ? <IonButton onClick={() => includeExcludeSong(element?.id, 'delete')}>Delete</IonButton> : <IonButton onClick={() => includeExcludeSong(element?.id, 'include')}>Add</IonButton>}</IonItem>)
+                  }
 
                 </Fragment>
               }

@@ -33,8 +33,8 @@ const Home: React.FC = ({ history, location }: any) => {
 
               
           <IonItem lines="none">
-            <IonIcon icon={musicalNotesOutline}></IonIcon>
-            <IonItem lines="none">General playlists</IonItem>
+            <IonIcon slot="start" icon={musicalNotesOutline}></IonIcon>
+            <IonItem lines="none"><IonText className="extra-bold">General playlists</IonText></IonItem>
             <IonButton onClick={() => history.push({
                               
                 pathname: '/playlists'
@@ -70,8 +70,8 @@ const Home: React.FC = ({ history, location }: any) => {
           <IonCard>
             <IonCardContent>
           <IonItem lines="none">
-            <IonIcon icon={peopleOutline}></IonIcon>
-            <IonItem lines="none">Authors</IonItem>
+            <IonIcon slot="start" icon={peopleOutline}></IonIcon>
+            <IonItem lines="none"><IonText className="extra-bold">Authors</IonText></IonItem>
             <IonButton onClick={() => history.push({
                               
                 pathname: '/authors',
@@ -107,8 +107,8 @@ const Home: React.FC = ({ history, location }: any) => {
           <IonCard>
             <IonCardContent>
           <IonItem lines="none">
-            <IonIcon icon={listOutline}></IonIcon>
-            <IonItem lines="none"><IonText>List of songs</IonText></IonItem>
+            <IonIcon slot="start" icon={listOutline}></IonIcon>
+            <IonItem lines="none"><IonText className="extra-bold">List of songs</IonText></IonItem>
             <IonButton onClick={() => history.push({
                               
                 pathname: '/songs',
