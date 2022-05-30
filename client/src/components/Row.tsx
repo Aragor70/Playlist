@@ -1,7 +1,6 @@
 import { IonButton, IonCol, IonIcon, IonRow } from '@ionic/react';
 import { musicalNote, musicalNoteOutline } from 'ionicons/icons';
 import moment from 'moment';
-import './ExploreContainer.css';
 
 
 const Row: React.FC<any> = ({ element, pageInfo, history }: any) => {
@@ -11,9 +10,16 @@ const Row: React.FC<any> = ({ element, pageInfo, history }: any) => {
         <IonCol>
             <IonIcon icon={musicalNoteOutline}></IonIcon>
         </IonCol>
-        <IonCol>
+        {
+            pageInfo === "authors" ? <IonCol>
+
+            {element.firstName} {element?.pseudo} {element?.lastName}  
+        </IonCol> : <IonCol>
+
             {element.title}
-        </IonCol>
+            </IonCol>
+        }
+        
         <IonCol>
             {moment(element.createdAt).format('DD-MM-YYYY hh:mm:ss')}
         </IonCol>

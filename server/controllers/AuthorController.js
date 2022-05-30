@@ -53,9 +53,9 @@ class AuthorController {
         
         await this.helpers.sanitize(id, /\d+/)
 
-        const author = await models.Author.findByPk(id, { include: { model: models.Song } })
+        const author = await models.Author.findByPk(id)
 
-        if (!song) return next(new ErrorResponse('Author does not exist.', 404));
+        if (!author) return next(new ErrorResponse('Author does not exist.', 404));
 
         return res.json({
             success: true,
@@ -71,7 +71,7 @@ class AuthorController {
 
         await this.helpers.sanitize(firstName, this.titlePattern)
 
-        const author = await models.Author.findByPk(id, { include: [{ model: models.Song }] })
+        const author = await models.Author.findByPk(id)
 
         if (!author) return next(new ErrorResponse('Song does not exist.', 404));
 

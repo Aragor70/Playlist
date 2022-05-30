@@ -1,11 +1,9 @@
 import { IonButton, IonCard, IonCol, IonContent, IonFooter, IonGrid, IonHeader, IonIcon, IonItem, IonList, IonPage, IonRow, IonText, IonTitle, IonToolbar } from '@ionic/react';
-import { listOutline, musicalNotesOutline, peopleOutline } from 'ionicons/icons';
 import { useEffect, useState } from 'react';
 import { withRouter } from 'react-router';
 import { getAll } from '../actions/api';
 import ContentHeadline from '../components/ContentHeadline';
 import EmptyRow from '../components/EmptyRow';
-import ExploreContainer from '../components/ExploreContainer';
 import PageHeader from '../components/PageHeader';
 import Row from '../components/Row';
 import './Home.css';

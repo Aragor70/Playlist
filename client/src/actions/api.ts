@@ -43,7 +43,6 @@ export const updateById = async (path: string = '', dispatch: any) => {
                 action
             }
         }
-        console.log(options)
 
         const res = await axios.put('/api/' + path + '/' + payload.id, payload, options)
 
@@ -68,9 +67,9 @@ export const createNew = async (path: string = '', payload: any) => {
 
 export const deleteOneById = async (path: string = '', payload: any) => {
     try {
-
-        const res = await axios.delete('/api/' + path + payload.id)
-
+        
+        const res = await axios.delete('/api/' + path + '/' + payload.id)
+        
         return res.data;
 
     } catch (err: any) {

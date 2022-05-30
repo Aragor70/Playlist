@@ -2,8 +2,8 @@ import { IonButton, IonButtons, IonCard, IonCardContent, IonCol, IonContent, Ion
 import { listOutline, musicalNotesOutline, peopleOutline } from 'ionicons/icons';
 import { useEffect, useState } from 'react';
 import { withRouter } from 'react-router';
+import CreatePopup from '../components/CreatePopup';
 import EmptyRow from '../components/EmptyRow';
-import ExploreContainer from '../components/ExploreContainer';
 import Filter from '../components/Filter';
 import PageHeader from '../components/PageHeader';
 import Row from '../components/Row';
@@ -14,6 +14,7 @@ const Home: React.FC = ({ history, location }: any) => {
   const [ playlists, setPlaylists ] = useState([])
   const [ authors, setAuthors ] = useState([])
   const [ songs, setSongs ] = useState([])
+  const [ createView, setCreateView ] = useState('')
 
   const [ loadingData, setLoadingData ] = useState(false)
 
@@ -30,50 +31,49 @@ const Home: React.FC = ({ history, location }: any) => {
           
           <IonCard>
             <IonCardContent>
-
               
-          <IonItem lines="none">
-            <IonIcon slot="start" icon={musicalNotesOutline}></IonIcon>
-            <IonItem lines="none"><IonText className="extra-bold">General playlists</IonText></IonItem>
-            <IonButtons slot="end" className='small-to-grid'>
+                <IonItem lines="none">
+                  <IonIcon slot="start" icon={musicalNotesOutline}></IonIcon>
+                  <IonItem lines="none"><IonText className="extra-bold">General playlists</IonText></IonItem>
+                  <IonButtons slot="end" className='small-to-grid'>
 
-              <IonButton onClick={() => history.push({
-                                
-                  pathname: '/playlists'
+                    <IonButton onClick={() => history.push({
+                                      
+                        pathname: '/playlists'
+                    
+                    })} slot="end" color='primary'>Get all</IonButton>
+
+                    <IonButton color='success' onClick={() => setCreateView('playlists')}>Add new</IonButton>
+                  </IonButtons>
+                  
+                </IonItem>
+                
+                <IonGrid>
+                <Filter setArray={setPlaylists} setLoading={setLoadingData} pageInfo={'playlists'} />
+                <IonRow className='l-grey-bcg'>
+                  <IonCol>
+                      icon
+                  </IonCol>
+                  <IonCol>
+                      title
+                  </IonCol>
+                  <IonCol>
+                      created at
+                  </IonCol>
+                  <IonCol>Show more</IonCol>
+              </IonRow>
               
-              })} slot="end" color='primary'>Get all</IonButton>
+                {
+                  loadingData ? <EmptyRow element={{ title: "loading..." }} /> : !!playlists.length ? playlists.slice(0, 5).map((element: any, index: number) => <Row key={element.id} element={element} pageInfo={'playlists'} history={history} />) :  <EmptyRow element={{ title: "No playlists." }} />
+                }
 
-              <IonButton color='success'>Add new</IonButton>
-            </IonButtons>
-            
-          </IonItem>
-          
-          <IonGrid>
-          <Filter setArray={setPlaylists} setLoading={setLoadingData} pageInfo={'playlists'} />
-          <IonRow className='l-grey-bcg'>
-            <IonCol>
-                icon
-            </IonCol>
-            <IonCol>
-                title
-            </IonCol>
-            <IonCol>
-                created at
-            </IonCol>
-            <IonCol>Show more</IonCol>
-        </IonRow>
-        
-          {
-            loadingData ? <EmptyRow element={{ title: "loading..." }} /> : !!playlists.length ? playlists.slice(0, 5).map((element: any, index: number) => <Row key={element.id} element={element} pageInfo={'playlists'} history={history} />) :  <EmptyRow element={{ title: "No playlists." }} />
-          }
+                </IonGrid>
+                
+                
+              </IonCardContent>
+            </IonCard>
 
-          </IonGrid>
-          
-              
-            </IonCardContent>
-          </IonCard>
-
-          <IonCard>
+            <IonCard>
             <IonCardContent>
           <IonItem lines="none">
             <IonIcon slot="start" icon={peopleOutline}></IonIcon>
@@ -86,7 +86,7 @@ const Home: React.FC = ({ history, location }: any) => {
               
               })} slot="end" color='primary'>Get all</IonButton>
 
-              <IonButton color='success'>Add new</IonButton>
+              <IonButton color='success' onClick={() => setCreateView('authors')}>Add new</IonButton>
             </IonButtons>
           </IonItem>
           
@@ -107,7 +107,7 @@ const Home: React.FC = ({ history, location }: any) => {
           </IonRow>
 
           {
-            loadingData ? <EmptyRow element={{ title: "loading..." }} /> : !!playlists.length ? authors.slice(0, 5).map((element: any, index: number) => <Row key={element.id} element={element} pageInfo={'authors'} history={history} />) :  <EmptyRow element={{ title: "No playlists." }} />
+            loadingData ? <EmptyRow element={{ title: "loading..." }} /> : !!playlists.length ? authors.slice(0, 5).map((element: any, index: number) => <Row key={element.id} element={element} pageInfo={'authors'} history={history} />) :  <EmptyRow element={{ title: "No authors." }} />
           }
 
           </IonGrid>
@@ -127,7 +127,7 @@ const Home: React.FC = ({ history, location }: any) => {
               
               })} slot="end" color='primary'>Get all</IonButton>
 
-              <IonButton color='success'>Add new</IonButton>
+              <IonButton color='success' onClick={() => setCreateView('songs')}>Add new</IonButton>
             </IonButtons>
           </IonItem>
           
@@ -148,7 +148,7 @@ const Home: React.FC = ({ history, location }: any) => {
         </IonRow>
 
           {
-            loadingData ? <EmptyRow element={{ title: "loading..." }} /> : !!playlists.length ? songs.slice(0, 5).map((element: any, index: number) => <Row key={element.id} element={element} pageInfo={'songs'} history={history} />) :  <EmptyRow element={{ title: "No playlists." }} />
+            loadingData ? <EmptyRow element={{ title: "loading..." }} /> : !!playlists.length ? songs.slice(0, 5).map((element: any, index: number) => <Row key={element.id} element={element} pageInfo={'songs'} history={history} />) :  <EmptyRow element={{ title: "No songs." }} />
           }
 
           </IonGrid>
@@ -156,7 +156,9 @@ const Home: React.FC = ({ history, location }: any) => {
           </IonCard>
         
         </IonList>
-
+        {
+          createView && <CreatePopup pageInfo={createView} setView={setCreateView} />
+        }
 
       </IonContent>
         <IonFooter className='ion-text-center'>

@@ -1,6 +1,5 @@
 import { IonCol, IonIcon, IonItem, IonRow } from '@ionic/react';
 import { musicalNotes } from 'ionicons/icons';
-import './ExploreContainer.css';
 
 interface ContainerProps { 
     element: any

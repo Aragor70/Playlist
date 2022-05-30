@@ -1,6 +1,5 @@
 import { IonCard, IonCardContent, IonCol, IonGrid, IonInput, IonItem, IonLabel, IonRow, IonText } from '@ionic/react';
 import { useEffect, useState } from 'react';
-import './ExploreContainer.css';
 import { getAll } from '../actions/api';
 
 interface ContainerProps { 
@@ -29,13 +28,17 @@ const Filter: React.FC<ContainerProps> = ({ setArray, setLoading, pageInfo = '' 
         (async () => {
 
             setLoading(true)
-            console.log(pageInfo)
+
             const res = await getAll(pageInfo, formData);
 
             setArray(res[pageInfo])
             setLoading(false)
 
         })()
+
+        return () => {
+            setArray([])
+        }
 
     }, [formData, pageInfo])
 
