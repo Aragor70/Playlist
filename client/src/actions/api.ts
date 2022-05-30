@@ -53,3 +53,27 @@ export const updateById = async (path: string = '', dispatch: any) => {
         console.log(err.message);
     }
 }
+
+export const createNew = async (path: string = '', payload: any) => {
+    try {
+
+        const res = await axios.post('/api/' + path, payload)
+
+        return res.data;
+
+    } catch (err: any) {
+        console.log(err.message);
+    }
+}
+
+export const deleteOneById = async (path: string = '', payload: any) => {
+    try {
+
+        const res = await axios.delete('/api/' + path + payload.id)
+
+        return res.data;
+
+    } catch (err: any) {
+        console.log(err.message);
+    }
+}

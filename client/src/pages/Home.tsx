@@ -1,4 +1,4 @@
-import { IonButton, IonCard, IonCardContent, IonCol, IonContent, IonFooter, IonGrid, IonHeader, IonIcon, IonItem, IonList, IonPage, IonRow, IonText, IonTitle, IonToolbar } from '@ionic/react';
+import { IonButton, IonButtons, IonCard, IonCardContent, IonCol, IonContent, IonFooter, IonGrid, IonHeader, IonIcon, IonItem, IonList, IonPage, IonRow, IonText, IonTitle, IonToolbar } from '@ionic/react';
 import { listOutline, musicalNotesOutline, peopleOutline } from 'ionicons/icons';
 import { useEffect, useState } from 'react';
 import { withRouter } from 'react-router';
@@ -35,11 +35,17 @@ const Home: React.FC = ({ history, location }: any) => {
           <IonItem lines="none">
             <IonIcon slot="start" icon={musicalNotesOutline}></IonIcon>
             <IonItem lines="none"><IonText className="extra-bold">General playlists</IonText></IonItem>
-            <IonButton onClick={() => history.push({
-                              
-                pathname: '/playlists'
+            <IonButtons slot="end" className='small-to-grid'>
+
+              <IonButton onClick={() => history.push({
+                                
+                  pathname: '/playlists'
+              
+              })} slot="end" color='primary'>Get all</IonButton>
+
+              <IonButton color='success'>Add new</IonButton>
+            </IonButtons>
             
-            })} slot="end">Get all</IonButton>
           </IonItem>
           
           <IonGrid>
@@ -72,12 +78,16 @@ const Home: React.FC = ({ history, location }: any) => {
           <IonItem lines="none">
             <IonIcon slot="start" icon={peopleOutline}></IonIcon>
             <IonItem lines="none"><IonText className="extra-bold">Authors</IonText></IonItem>
-            <IonButton onClick={() => history.push({
-                              
-                pathname: '/authors',
-                state: { new_wallet: true }
-            
-            })} slot="end">Get all</IonButton>
+            <IonButtons slot="end" className='small-to-grid'>
+
+              <IonButton onClick={() => history.push({
+                                
+                  pathname: '/authors'
+              
+              })} slot="end" color='primary'>Get all</IonButton>
+
+              <IonButton color='success'>Add new</IonButton>
+            </IonButtons>
           </IonItem>
           
           <IonGrid>
@@ -109,12 +119,16 @@ const Home: React.FC = ({ history, location }: any) => {
           <IonItem lines="none">
             <IonIcon slot="start" icon={listOutline}></IonIcon>
             <IonItem lines="none"><IonText className="extra-bold">List of songs</IonText></IonItem>
-            <IonButton onClick={() => history.push({
-                              
-                pathname: '/songs',
-                state: { new_wallet: true }
-            
-            })} slot="end">Get all</IonButton>
+            <IonButtons slot="end" className='small-to-grid'>
+
+              <IonButton onClick={() => history.push({
+                                
+                  pathname: '/songs'
+              
+              })} slot="end" color='primary'>Get all</IonButton>
+
+              <IonButton color='success'>Add new</IonButton>
+            </IonButtons>
           </IonItem>
           
           <IonGrid>

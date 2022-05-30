@@ -51,11 +51,6 @@ const Filter: React.FC<ContainerProps> = ({ setArray, setLoading, pageInfo = '' 
         <IonRow>
             <IonCol>
                 <IonLabel>
-                    <IonInput name='phrase' value={formData?.phrase || ""} placeholder="Search by phrase" ref={phrase} type='text' onIonChange={(e: any) => handleChange(e)}></IonInput>
-                </IonLabel>
-            </IonCol>
-            <IonCol>
-                <IonLabel>
                     <IonText slot='start'>Uploaded from</IonText>
                     <IonInput name='startDate' type='date' onIonChange={(e: any) => handleChange(e)}></IonInput>
                 </IonLabel>
@@ -66,6 +61,12 @@ const Filter: React.FC<ContainerProps> = ({ setArray, setLoading, pageInfo = '' 
                     <IonInput name='endDate' type='date' onIonChange={(e: any) => handleChange(e)}></IonInput>
                 </IonLabel>
             </IonCol>
+        </IonRow>
+        <IonRow>
+            
+            <IonLabel style={{ width: '100%' }}>
+                <IonInput name='phrase' value={formData?.phrase || ""} placeholder="Search by phrase" ref={phrase} type='text' onIonChange={(e: any) => handleChange(e)}></IonInput>
+            </IonLabel>
         </IonRow>
     </IonGrid>
     

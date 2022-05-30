@@ -51,6 +51,10 @@ ion-list.cards {
 ion-input[type="text"] {
   border-bottom: 1px solid #4d4d4d;
 }
+
+.text-input {
+  width: 100%;
+}
 ion-col {
   display: flex;
   align-items: center;
@@ -63,4 +67,11 @@ ion-col h1 {
 
 .extra-bold {
   font-weight: 900;
+}
+
+@media (max-width: 768px) {
+  
+  .small-to-grid {
+    display: grid;
+  }
 }

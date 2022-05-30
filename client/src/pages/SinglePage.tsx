@@ -1,8 +1,8 @@
-import { IonButton, IonCard, IonCardContent, IonCardHeader, IonCol, IonContent, IonFooter, IonGrid, IonHeader, IonIcon, IonItem, IonList, IonPage, IonRow, IonText, IonTitle, IonToolbar } from '@ionic/react';
+import { IonButton, IonButtons, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonCol, IonContent, IonFooter, IonGrid, IonHeader, IonIcon, IonItem, IonList, IonPage, IonRow, IonText, IonTitle, IonToolbar } from '@ionic/react';
 import { listOutline, musicalNotesOutline, peopleOutline } from 'ionicons/icons';
 import { Fragment, useEffect, useState } from 'react';
 import { withRouter } from 'react-router';
-import { getAll, getOneById, updateById } from '../actions/api';
+import { deleteOneById, getAll, getOneById, updateById } from '../actions/api';
 import ContentHeadline from '../components/ContentHeadline';
 import EmptyRow from '../components/EmptyRow';
 import ExploreContainer from '../components/ExploreContainer';
@@ -19,11 +19,12 @@ const SinglePage: React.FC = ({ location, match }: any) => {
   const [ pageInfo, setPageInfo ] = useState("")
 
   const [ openInclude, setOpenInclude ] = useState(false)
+  const [ allowEdit, setAllowEdit ] = useState(false)
 
   const [ allSongs, setAllSongs ] = useState([])
 
 
-  const includeExcludeSong = async (song_id: any, action: string) => {
+  const includeExcludeSong = async (song_id: any, action: string = '') => {
     try {
       
       setLoadingData(true)
@@ -107,15 +108,47 @@ const SinglePage: React.FC = ({ location, match }: any) => {
             <ContentHeadline element={{ title: pageInfo, description: "Element of " + pageInfo }} />
           </IonGrid>
 
-
           {
             loadingData ? 'loading...' : element ? <Fragment>
 
+              
+              <IonCard>
+                <IonCardContent>
+
+
+                  {
+                    (pageInfo === 'playlists') && <Fragment>
+
+                      <IonButtons>
+                        <IonButton style={{ margin: '0 auto'}} color="success" onClick={() => loadSongs(openInclude)}>Include a song</IonButton>
+                        <IonButton style={{ margin: '0 auto'}} color="warning" onClick={() => setAllowEdit( !allowEdit )}>Edit</IonButton>
+                        <IonButton style={{ margin: '0 auto'}} color="danger" onClick={() => deleteOneById( pageInfo, { id: match.params.id } )}>Delete</IonButton>
+                      </IonButtons>
+
+                    </Fragment>
+                  }
+                  {
+                    (pageInfo === 'playlists' && openInclude) && <Fragment>
+
+                      {
+                        allSongs?.map((element: any) => <IonItem key={element.id}>{element.title}{!!element?.Playlists?.filter((elem: any) => elem?.id === parseInt(match?.params?.id))[0] ? <IonButton onClick={() => includeExcludeSong(element?.id, 'delete')}>Delete</IonButton> : <IonButton onClick={() => includeExcludeSong(element?.id, 'include')}>Add</IonButton>}</IonItem>)
+                      }
+
+                    </Fragment>
+                  }
+
+                  
+                </IonCardContent>
+              </IonCard>
+
+
               <IonCard>
                 <IonCardHeader>
-                  {
-                    element?.title
-                  }
+                  <IonCardTitle>
+                    {
+                      element?.title
+                    }
+                  </IonCardTitle>
                 </IonCardHeader>
                 <IonCardContent>
                   <IonList>
@@ -133,27 +166,13 @@ const SinglePage: React.FC = ({ location, match }: any) => {
                 </IonCardContent>
               </IonCard>
               
-              {
-                (pageInfo === 'playlists') && <Fragment>
-
-                  <IonButton onClick={() => loadSongs(openInclude)}>Include a song</IonButton>
-
-                </Fragment>
-              }
-              {
-                (pageInfo === 'playlists' && openInclude) && <Fragment>
-
-                  {
-                    allSongs?.map((element: any) => <IonItem key={element.id}>{element.title}{!!element?.Playlists?.filter((elem: any) => elem?.id === parseInt(match?.params?.id))[0] ? <IonButton onClick={() => includeExcludeSong(element?.id, 'delete')}>Delete</IonButton> : <IonButton onClick={() => includeExcludeSong(element?.id, 'include')}>Add</IonButton>}</IonItem>)
-                  }
-
-                </Fragment>
-              }
+              
 
 
 
             </Fragment> : null
           }
+            
           
         </IonList>
         
