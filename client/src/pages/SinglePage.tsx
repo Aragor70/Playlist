@@ -138,6 +138,16 @@ const SinglePage: React.FC = ({ location, match, history }: any) => {
                     </Fragment>
                   }
                   {
+                    (pageInfo === 'authors') && <Fragment>
+
+                      <IonButtons>
+                      <IonButton style={{ margin: '0 auto'}} color="warning" onClick={() => setAllowEdit( !allowEdit )}>Edit</IonButton>
+                        <IonButton style={{ margin: '0 auto'}} color="danger" onClick={() => {deleteOneById( pageInfo, { id: match.params.id } ); history.push('/')}}>Delete</IonButton>
+                      </IonButtons>
+
+                    </Fragment>
+                  }
+                  {
                     (pageInfo === 'playlists' && openInclude) && <Fragment>
 
                       {
@@ -156,11 +166,31 @@ const SinglePage: React.FC = ({ location, match, history }: any) => {
                 <IonCardHeader>
                   <IonCardTitle>
                     {
-                      allowEdit ? <div>
-                        <IonInput type="text" name="title" onIonChange={(e: any) => setFormData({ ...formData, [e.target.name]: e.target.value })} />
-                        <IonButton onClick={() => {updateById(pageInfo, {payload: {id: match.params.id, ...formData}}); setAllowEdit(false)}}>submit</IonButton>
-                      </div> : element.title
+                      (pageInfo === 'authors') ? <Fragment>
+
+                          
+                        {
+                          allowEdit ? <div>
+                            <IonInput type="text" name="firstName" placeholder="firstName" onIonChange={(e: any) => setFormData({ ...formData, [e.target.name]: e.target.value })} />
+                            <IonInput type="text" name="lastName" placeholder="lastName" onIonChange={(e: any) => setFormData({ ...formData, [e.target.name]: e.target.value })} />
+                            <IonInput type="text" name="pseudo" placeholder="pseudo" onIonChange={(e: any) => setFormData({ ...formData, [e.target.name]: e.target.value })} />
+                            <IonButton onClick={() => {updateById(pageInfo, {payload: {id: match.params.id, ...formData}}); setAllowEdit(false)}}>submit</IonButton>
+                          </div> : <Fragment>
+                            {element.firstName} {element.pseudo} {element.lastName} 
+                          </Fragment>
+                        }
+
+                      </Fragment> : <Fragment>
+                        {
+                          allowEdit ? <div>
+                            <IonInput type="text" name="title" onIonChange={(e: any) => setFormData({ ...formData, [e.target.name]: e.target.value })} />
+                            <IonButton onClick={() => {updateById(pageInfo, {payload: {id: match.params.id, ...formData}}); setAllowEdit(false)}}>submit</IonButton>
+                          </div> : element.title
+                        }
+                      </Fragment>
+                      
                     }
+                    
                   </IonCardTitle>
                 </IonCardHeader>
                 <IonCardContent>

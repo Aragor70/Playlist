@@ -122,7 +122,7 @@ class AuthorController {
 
         await this.helpers.sanitize(id, /\d+/)
 
-        const author = await models.Song.findByPk(id);
+        const author = await models.Author.findByPk(id);
 
         if (!author) return next(new ErrorResponse('Author does not exist.', 404));
 
