@@ -437,15 +437,6 @@ body.dark {
 
   
 }
-/* body.dark ion-content
-{
-
---background: url('./images/svg/snowman2.svg') no-repeat fixed bottom;
--webkit-background-size: cover;
--moz-background-size: cover;
-background-size: cover;
-background-repeat: no-repeat;
-} */
 
 body.dark ion-card
 {

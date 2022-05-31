@@ -8,8 +8,8 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      SongId : {
-        type : Sequelize.INTEGER,
+      SongId: {
+        type: Sequelize.INTEGER,
         references: {
           model: {
             tableName: "Songs"
@@ -18,8 +18,8 @@ module.exports = {
         },
         allowNull: false
       },
-      PlaylistId : {
-        type : Sequelize.INTEGER,
+      PlaylistId: {
+        type: Sequelize.INTEGER,
         references: {
           model: {
             tableName: "Playlists"

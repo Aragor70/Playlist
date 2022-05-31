@@ -34,11 +34,11 @@ class AuthorController {
             },
             order: [
                 ['firstName', 'ASC']
-            ]
+            ],
+            include: { model: models.Song }
         }
 
         const authors = await models.Author.findAll(options)
-
 
         return res.json({
             success: true,
@@ -53,7 +53,7 @@ class AuthorController {
         
         await this.helpers.sanitize(id, /\d+/)
 
-        const author = await models.Author.findByPk(id)
+        const author = await models.Author.findByPk(id, { include: { model: models.Song } })
 
         if (!author) return next(new ErrorResponse('Author does not exist.', 404));
 
@@ -71,7 +71,7 @@ class AuthorController {
 
         await this.helpers.sanitize(firstName, this.titlePattern)
 
-        const author = await models.Author.findByPk(id)
+        const author = await models.Author.findByPk(id, { include: { model: models.Song } })
 
         if (!author) return next(new ErrorResponse('Song does not exist.', 404));
 
@@ -86,7 +86,6 @@ class AuthorController {
         author.pseudo = pseudo || author.pseudo;
 
         await author.save();
-
 
         return res.status(201).json({
             message: "Author updated",
@@ -122,7 +121,7 @@ class AuthorController {
 
         await this.helpers.sanitize(id, /\d+/)
 
-        const author = await models.Author.findByPk(id);
+        const author = await models.Author.findByPk(id, { include: { model: models.Song } });
 
         if (!author) return next(new ErrorResponse('Author does not exist.', 404));
 

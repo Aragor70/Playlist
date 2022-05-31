@@ -43,7 +43,7 @@ class SongController {
             ],
             include: [{ model: models.Author }, { model: models.Playlist, through: { model: models.SongPlaylist }}]
         }
-
+        console.log('hi')
         const songs = await models.Song.findAll(options)
 
         return res.json({
@@ -93,13 +93,13 @@ class SongController {
         }
         if (typeof author_id === "number" && action === 'include') {
             
-            song.author_id = author_id;
+            song.AuthorId = author_id;
 
             await song.save();
             
         } else if (typeof author_id === "number" && action === 'delete') {
 
-            song.author_id = null;
+            song.AuthorId = null;
             song.Author = null;
 
             await song.save();
@@ -132,7 +132,7 @@ class SongController {
 
         }
 
-        const song = await models.Song.create({ title, author_id }).then((element) => {
+        const song = await models.Song.create({ title, AuthorId: author_id }).then((element) => {
             return models.Song.findByPk(element.id, {include: { model: models.Author }})
         });
         

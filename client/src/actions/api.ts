@@ -37,7 +37,6 @@ export const updateById = async (path: string = '', dispatch: any) => {
 
         const { payload, action } = dispatch;
         
-        
         const options = {
             params: {
                 action
@@ -67,7 +66,7 @@ export const createNew = async (path: string = '', payload: any) => {
 
 export const deleteOneById = async (path: string = '', payload: any) => {
     try {
-        
+
         const res = await axios.delete('/api/' + path + '/' + payload.id)
         
         return res.data;

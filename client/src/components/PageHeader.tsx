@@ -3,7 +3,7 @@ import { IonHeader, IonTitle, IonIcon, IonItem, IonMenuToggle } from '@ionic/rea
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 
 
-import { moon, sunny } from 'ionicons/icons';
+import { menu, moon, sunny } from 'ionicons/icons';
 import { useEffect, useState } from 'react';
 
 const PageHeader: React.FC<RouteComponentProps | any> = ({ history }) => {
@@ -41,7 +41,7 @@ const PageHeader: React.FC<RouteComponentProps | any> = ({ history }) => {
             <IonIcon icon={isDarkMode ? sunny : moon} onClick={() => handleToggle()} slot="end"></IonIcon>
             
             <IonMenuToggle slot="end" className="vertical-center" style={{ marginLeft: '15px'}}>
-              <IonIcon size="large" color="dark" name="menu-outline"></IonIcon>
+              <IonIcon size="large" color="dark" icon={menu}></IonIcon>
             </IonMenuToggle>
         </IonItem>
       </IonHeader>

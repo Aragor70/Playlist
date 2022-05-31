@@ -1,10 +1,9 @@
-import { IonButton, IonButtons, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonCol, IonContent, IonFooter, IonGrid, IonHeader, IonIcon, IonInput, IonItem, IonList, IonPage, IonRow, IonText, IonTitle, IonToolbar } from '@ionic/react';
+import { IonButton, IonButtons, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonContent, IonFooter, IonGrid, IonHeader, IonIcon, IonInput, IonItem, IonList, IonPage, IonRow, IonText, IonTitle, IonToolbar } from '@ionic/react';
 import { Fragment, useEffect, useState } from 'react';
 import { withRouter } from 'react-router';
 import { deleteOneById, getAll, getOneById, updateById } from '../actions/api';
 import ContentHeadline from '../components/ContentHeadline';
 import PageHeader from '../components/PageHeader';
-import './Home.css';
 
 const SinglePage: React.FC = ({ location, match, history }: any) => {
 
@@ -20,6 +19,18 @@ const SinglePage: React.FC = ({ location, match, history }: any) => {
   const [ allData, setAllData ] = useState([])
 
   const [ formData, setFormData ] = useState<any>({})
+
+  
+  const listOf : any= {
+    songs: 'playlists',
+    playlists: 'songs'
+  }
+
+  const buttons: any = {
+    songs: [{ value: 'Include to the playlist', color: 'success', action: () => loadData(openInclude)}, {value: 'Edit', color: 'warning', action: () => setAllowEdit( !allowEdit )}, {value: 'Delete', color: 'danger', action: () => {deleteOneById( pageInfo, { id: match.params.id } ); history.push('/')}}],
+    playlists: [{ value: 'Include a song', color: 'success', action: () => loadData(openInclude)}, {value: 'Edit', color: 'warning', action: () => setAllowEdit( !allowEdit )}, {value: 'Delete', color: 'danger', action: () => {deleteOneById( pageInfo, { id: match.params.id } ); history.push('/')}}],
+    authors: [false, {value: 'Edit', color: 'warning', action: () => setAllowEdit( !allowEdit )}, {value: 'Delete', color: 'danger', action: () => {deleteOneById( pageInfo, { id: match.params.id } ); history.push('/')}}]
+  }
 
   const includeExcludeSong = async (song_id: any, action: string = '') => {
     try {
@@ -55,13 +66,11 @@ const SinglePage: React.FC = ({ location, match, history }: any) => {
 
       setOpenInclude(!isOpen)
 
-      const res = await getAll(pageInfo);
+      const res = await getAll(listOf[pageInfo]);
 
-      const values = res?.songs;
-      
+      const values = res[listOf[pageInfo]];
+      console.log(values)
       setAllData(values)
-      
-
       
     } catch (err: any) {
       console.log(err.message)
@@ -80,7 +89,6 @@ const SinglePage: React.FC = ({ location, match, history }: any) => {
         const res = await getOneById(path, { payload: {id: match.params.id} });
         
         const value = res[path.slice(0, path.length - 1)]
-
         
         setFormData({ ...value })
         setElement(value)
@@ -114,44 +122,26 @@ const SinglePage: React.FC = ({ location, match, history }: any) => {
               <IonCard>
                 <IonCardContent>
 
-
-                  {
-                    (pageInfo === 'playlists') && <Fragment>
-
-                      <IonButtons>
-                        <IonButton style={{ margin: '0 auto'}} color="success" onClick={() => loadData(openInclude)}>Include a song</IonButton>
-                        <IonButton style={{ margin: '0 auto'}} color="warning" onClick={() => setAllowEdit( !allowEdit )}>Edit</IonButton>
-                        <IonButton style={{ margin: '0 auto'}} color="danger" onClick={() => {deleteOneById( pageInfo, { id: match.params.id } ); history.push('/')}}>Delete</IonButton>
-                      </IonButtons>
-
-                    </Fragment>
-                  }
-                  {
-                    (pageInfo === 'songs') && <Fragment>
-
-                      <IonButtons>
-                        <IonButton style={{ margin: '0 auto'}} color="success" onClick={() => loadData(openInclude)}>Include to an playlist</IonButton>
-                        <IonButton style={{ margin: '0 auto'}} color="warning" onClick={() => setAllowEdit( !allowEdit )}>Edit</IonButton>
-                        <IonButton style={{ margin: '0 auto'}} color="danger" onClick={() => {deleteOneById( pageInfo, { id: match.params.id } ); history.push('/')}}>Delete</IonButton>
-                      </IonButtons>
-
-                    </Fragment>
-                  }
-                  {
-                    (pageInfo === 'authors') && <Fragment>
-
-                      <IonButtons>
-                      <IonButton style={{ margin: '0 auto'}} color="warning" onClick={() => setAllowEdit( !allowEdit )}>Edit</IonButton>
-                        <IonButton style={{ margin: '0 auto'}} color="danger" onClick={() => {deleteOneById( pageInfo, { id: match.params.id } ); history.push('/')}}>Delete</IonButton>
-                      </IonButtons>
-
-                    </Fragment>
-                  }
+                  <IonButtons>
+                    {
+                      buttons[pageInfo].map((element: any, index: number) => element ? <IonButton key={index} style={{ margin: '0 auto'}} color={element.color} onClick={element.action}>{element.value}</IonButton> : null)
+                    }
+                  </IonButtons>
+                  
                   {
                     (pageInfo === 'playlists' && openInclude) && <Fragment>
 
                       {
                         allData?.map((element: any) => <IonItem key={element.id}>{element.title}{!!element?.Playlists?.filter((elem: any) => elem?.id === parseInt(match?.params?.id))[0] ? <IonButton onClick={() => includeExcludeSong(element?.id, 'delete')}>Delete</IonButton> : <IonButton onClick={() => includeExcludeSong(element?.id, 'include')}>Add</IonButton>}</IonItem>)
+                      }
+
+                    </Fragment>
+                  }
+                  {
+                    (pageInfo === 'songs' && openInclude) && <Fragment>
+
+                      {
+                        allData?.map((element: any) => <IonItem key={element.id}>{element.title}{!!element?.Songs?.filter((elem: any) => elem?.id === parseInt(match?.params?.id))[0] ? <IonButton onClick={() => includeExcludeSong(element?.id, 'delete')}>Delete</IonButton> : <IonButton onClick={() => includeExcludeSong(element?.id, 'include')}>Add</IonButton>}</IonItem>)
                       }
 
                     </Fragment>
@@ -200,7 +190,11 @@ const SinglePage: React.FC = ({ location, match, history }: any) => {
 
                       : 
 
-                      pageInfo === 'songs' ? element['Songs']?.map((element: any) => <IonItem key={element.id}>{element.title}</IonItem>)
+                      pageInfo === 'songs' ? element['Authors']?.map((element: any) => <IonItem key={element.id}>{element.firstName} {element.pseudo} {element.lastName}</IonItem>)
+
+                      : 
+                      
+                      pageInfo === 'authors' ? element['Songs']?.map((element: any) => <IonItem key={element.id}>{element.title}</IonItem>)
 
                       : null
 

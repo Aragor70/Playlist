@@ -1,5 +1,5 @@
 import { IonButton, IonCol, IonIcon, IonRow } from '@ionic/react';
-import { musicalNote, musicalNoteOutline } from 'ionicons/icons';
+import { musicalNoteOutline } from 'ionicons/icons';
 import moment from 'moment';
 
 
@@ -8,7 +8,7 @@ const Row: React.FC<any> = ({ element, pageInfo, history }: any) => {
     
     <IonRow>
         <IonCol>
-            <IonIcon icon={musicalNoteOutline}></IonIcon>
+            <IonIcon icon={musicalNoteOutline} />
         </IonCol>
         {
             pageInfo === "authors" ? <IonCol>

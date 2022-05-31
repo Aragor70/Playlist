@@ -1,4 +1,4 @@
-import { IonButton, IonCard, IonCol, IonContent, IonFooter, IonGrid, IonHeader, IonIcon, IonItem, IonList, IonPage, IonRow, IonText, IonTitle, IonToolbar } from '@ionic/react';
+import { IonContent, IonFooter, IonGrid, IonHeader, IonList, IonPage, IonToolbar } from '@ionic/react';
 import { useEffect, useState } from 'react';
 import { withRouter } from 'react-router';
 import { getAll } from '../actions/api';
@@ -6,12 +6,10 @@ import ContentHeadline from '../components/ContentHeadline';
 import EmptyRow from '../components/EmptyRow';
 import PageHeader from '../components/PageHeader';
 import Row from '../components/Row';
-import './Home.css';
 
 const ListingPage: React.FC = ({ location, history }: any) => {
 
   const [ array, setArray ] = useState([])
-
 
   const [ loadingData, setLoadingData ] = useState(false)
 
@@ -20,18 +18,25 @@ const ListingPage: React.FC = ({ location, history }: any) => {
   useEffect(() => {
 
     (async () => {
-
-        setLoadingData(true)
         
-        const path = location.pathname?.replace(/\//, '')
-        setPageInfo(path)
+        try {
+          
+          const path = location.pathname?.replace(/\//, '')
+          setPageInfo(path)
 
+          if (!path) return
+          
+          setLoadingData(true)
 
-        const res = await getAll(path);
-        
-        const values = res[path]
-        setArray(values)
-        setLoadingData(false)
+          const res = await getAll(path);
+          
+          const values = res[path]
+          setArray(values)
+          setLoadingData(false)
+
+        } catch (err: any) {
+          console.log(err.message)
+        }
       
     })()
 

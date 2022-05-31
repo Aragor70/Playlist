@@ -1,15 +1,14 @@
 import { IonButton, IonButtons, IonCard, IonCardContent, IonCol, IonContent, IonFooter, IonGrid, IonHeader, IonIcon, IonItem, IonList, IonPage, IonRow, IonText, IonTitle, IonToolbar } from '@ionic/react';
 import { listOutline, musicalNotesOutline, peopleOutline } from 'ionicons/icons';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { withRouter } from 'react-router';
 import CreatePopup from '../components/CreatePopup';
 import EmptyRow from '../components/EmptyRow';
 import Filter from '../components/Filter';
 import PageHeader from '../components/PageHeader';
 import Row from '../components/Row';
-import './Home.css';
 
-const Home: React.FC = ({ history, location }: any) => {
+const Home: React.FC = ({ history }: any) => {
 
   const [ playlists, setPlaylists ] = useState([])
   const [ authors, setAuthors ] = useState([])
@@ -17,6 +16,7 @@ const Home: React.FC = ({ history, location }: any) => {
   const [ createView, setCreateView ] = useState('')
 
   const [ loadingData, setLoadingData ] = useState(false)
+
 
   return (
     <IonPage>
@@ -33,7 +33,7 @@ const Home: React.FC = ({ history, location }: any) => {
             <IonCardContent>
               
                 <IonItem lines="none">
-                  <IonIcon slot="start" icon={musicalNotesOutline}></IonIcon>
+                  <IonIcon slot="start" icon={musicalNotesOutline} />
                   <IonItem lines="none"><IonText className="extra-bold">General playlists</IonText></IonItem>
                   <IonButtons slot="end" className='small-to-grid'>
 
@@ -76,7 +76,7 @@ const Home: React.FC = ({ history, location }: any) => {
             <IonCard>
             <IonCardContent>
           <IonItem lines="none">
-            <IonIcon slot="start" icon={peopleOutline}></IonIcon>
+            <IonIcon slot="start" icon={peopleOutline} />
             <IonItem lines="none"><IonText className="extra-bold">Authors</IonText></IonItem>
             <IonButtons slot="end" className='small-to-grid'>
 
@@ -107,7 +107,7 @@ const Home: React.FC = ({ history, location }: any) => {
           </IonRow>
 
           {
-            loadingData ? <EmptyRow element={{ title: "loading..." }} /> : !!playlists.length ? authors.slice(0, 5).map((element: any, index: number) => <Row key={element.id} element={element} pageInfo={'authors'} history={history} />) :  <EmptyRow element={{ title: "No authors." }} />
+            loadingData ? <EmptyRow element={{ title: "loading..." }} /> : !!authors.length ? authors.slice(0, 5).map((element: any, index: number) => <Row key={element.id} element={element} pageInfo={'authors'} history={history} />) :  <EmptyRow element={{ title: "No authors." }} />
           }
 
           </IonGrid>
@@ -117,7 +117,7 @@ const Home: React.FC = ({ history, location }: any) => {
           <IonCard>
             <IonCardContent>
           <IonItem lines="none">
-            <IonIcon slot="start" icon={listOutline}></IonIcon>
+            <IonIcon slot="start" icon={listOutline} />
             <IonItem lines="none"><IonText className="extra-bold">List of songs</IonText></IonItem>
             <IonButtons slot="end" className='small-to-grid'>
 
@@ -148,7 +148,7 @@ const Home: React.FC = ({ history, location }: any) => {
         </IonRow>
 
           {
-            loadingData ? <EmptyRow element={{ title: "loading..." }} /> : !!playlists.length ? songs.slice(0, 5).map((element: any, index: number) => <Row key={element.id} element={element} pageInfo={'songs'} history={history} />) :  <EmptyRow element={{ title: "No songs." }} />
+            loadingData ? <EmptyRow element={{ title: "loading..." }} /> : !!songs.length ? songs.slice(0, 5).map((element: any, index: number) => <Row key={element.id} element={element} pageInfo={'songs'} history={history} />) :  <EmptyRow element={{ title: "No songs." }} />
           }
 
           </IonGrid>

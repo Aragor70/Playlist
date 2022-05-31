@@ -1,9 +1,9 @@
-import { IonButton, IonButtons, IonCol, IonIcon, IonInput, IonItem, IonLabel, IonRow, IonText } from '@ionic/react';
+import { IonButton, IonButtons, IonInput, IonItem, IonText } from '@ionic/react';
 import { Fragment, useState } from 'react';
 import { createNew } from '../actions/api';
 
 
-const CreatePopup: React.FC<any> = ({ pageInfo="", setView, setLoading }: any) => {
+const CreatePopup: React.FC<any> = ({ pageInfo="", setView }: any) => {
 
     const [formData, setFormData] = useState<any>({
       title: '',
@@ -44,7 +44,7 @@ const CreatePopup: React.FC<any> = ({ pageInfo="", setView, setLoading }: any) =
         pageInfo && inputs[pageInfo]?.map((element: any, index: number) => <Fragment key={index}>
           
           <IonItem>
-            <IonText slot="start">{element || 'N/A'}</IonText>
+            <IonText slot="start">{element || ''}</IonText>
             <IonInput name={element} onIonChange={(e) => handleChange(e)} value={formData[element] || ""} />
             
           </IonItem>
