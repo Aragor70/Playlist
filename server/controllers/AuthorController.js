@@ -1,44 +1,18 @@
 const asyncHandler = require("../middlewares/async");
-const ErrorResponse = require("../tools/ErrorResponse");
-
-const Sequelize = require('sequelize');
-const Op = Sequelize.Op;
-const moment = require('moment');
-const models = require("../models");
-const Helpers = require("../tools/Helpers");
+const AuthorService = require('../services/AuthorService')
 
 
 class AuthorController {
 
-    titlePattern = /^[0-9a-zA-Z \-_.,]+$/
-
-    helpers = new Helpers
+    
+    constructor() {
+        this.authorService = new AuthorService
+    }
+    
 
     getAuthors = asyncHandler( async(req, res, next) => {
-
-        const { phrase = null } = req.query;
         
-        if (phrase && (typeof phrase !== 'string' || !phrase.match(this.titlePattern))) {
-            return next(new ErrorResponse('Use letters, numbers, spaces, commas (,) dots (.) dashes (-), or underlines (_).', 422)); 
-        }
-
-        const phraseOptions = await phrase ? {
-            title: {
-                [Op.iLike]: `%${phrase}%`
-            },
-        } : {}
-        
-        const options = {
-            where: {
-                ...phraseOptions,
-            },
-            order: [
-                ['firstName', 'ASC']
-            ],
-            include: { model: models.Song }
-        }
-
-        const authors = await models.Author.findAll(options)
+        const authors = await this.authorService.getAuthors(req.query)
 
         return res.json({
             success: true,
@@ -51,11 +25,7 @@ class AuthorController {
 
         const { id } = req.params;
         
-        await this.helpers.sanitize(id, /\d+/)
-
-        const author = await models.Author.findByPk(id, { include: { model: models.Song } })
-
-        if (!author) return next(new ErrorResponse('Author does not exist.', 404));
+        const author = await this.authorService.getAuthor(id)
 
         return res.json({
             success: true,
@@ -69,23 +39,9 @@ class AuthorController {
         const { firstName, lastName, pseudo } = req.body;
         const { id } = req.params;
 
-        await this.helpers.sanitize(firstName, this.titlePattern)
+        const payload = { firstName, lastName, pseudo, author_id: id}
 
-        const author = await models.Author.findByPk(id, { include: { model: models.Song } })
-
-        if (!author) return next(new ErrorResponse('Song does not exist.', 404));
-
-        if (lastName) {
-            await this.helpers.sanitize(lastName, this.titlePattern)
-
-            author.lastName = lastName || author.lastName;
-
-        }
-
-        author.firstName = firstName || author.firstName;
-        author.pseudo = pseudo || author.pseudo;
-
-        await author.save();
+        const author = await this.authorService.updateAuthor(payload)
 
         return res.status(201).json({
             message: "Author updated",
@@ -99,12 +55,9 @@ class AuthorController {
 
         const { firstName, lastName, pseudo } = req.body;
 
-        await this.helpers.sanitize(firstName, this.titlePattern)
-        if (lastName) {
-            await this.helpers.sanitize(lastName, this.titlePattern)
-        }
-        
-        const author = await models.Author.create({ firstName, lastName, pseudo });
+        const payload = { firstName, lastName, pseudo }
+
+        const author = await this.authorService.createAuthor(payload)
 
         return res.status(201).json({
             message: "Author Created",
@@ -119,14 +72,7 @@ class AuthorController {
 
         const { id } = req.params;
 
-        await this.helpers.sanitize(id, /\d+/)
-
-        const author = await models.Author.findByPk(id, { include: { model: models.Song } });
-
-        if (!author) return next(new ErrorResponse('Author does not exist.', 404));
-
-        await models.Author.destroy({ where: { id } });
-        
+        const author = await this.authorService.deleteAuthor(id)
 
         return res.status(200).json({
             message: "Author Deleted",
