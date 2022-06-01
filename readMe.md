@@ -100,3 +100,5 @@ If some scenario is not covered, please let me know by email.
 created by mikey.prus@gmail.com
 
 ---
+
+<p align="center"><img src="client/public/image.png" width="100%" alt="playlist"></p>
