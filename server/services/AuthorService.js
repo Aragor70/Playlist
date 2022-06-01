@@ -59,12 +59,14 @@ class AuthorService {
 
         const { firstName, lastName, pseudo, author_id} = payload
 
-        await this.helpers.sanitize(firstName, this.titlePattern)
-
         const author = await this.getAuthor(author_id)
 
         if (!author) throw new ErrorResponse('Song does not exist.', 404);
 
+        if (firstName) {
+            await this.helpers.sanitize(firstName, this.titlePattern)
+
+        }
         if (lastName) {
             await this.helpers.sanitize(lastName, this.titlePattern)
 
