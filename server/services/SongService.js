@@ -5,6 +5,7 @@ const Sequelize = require('sequelize');
 const Op = Sequelize.Op;
 const moment = require('moment');
 const Helpers = require("../tools/Helpers");
+const AuthorService = require('./AuthorService');
 
 
 class SongController {
@@ -12,6 +13,11 @@ class SongController {
     titlePattern = /^[0-9a-zA-Z \-_.,]+$/
 
     helpers = new Helpers
+
+    
+    constructor() {
+        this.authorService = new AuthorService
+    }
 
     getSongs = async(query) => {
 
@@ -104,13 +110,13 @@ class SongController {
     createSong = async(payload) => {
 
         const { title, author_id } = payload;
-
+        
         await this.helpers.sanitize(title, this.titlePattern)
 
         if (author_id) {
-
-            const author = await this.getSong(song_id)
-
+            
+            const author = await this.authorService.getAuthor(author_id)
+            
             if (!author) {
                 throw new ErrorResponse('Author does not exist.', 404); 
             }

@@ -5,6 +5,7 @@ const Op = Sequelize.Op;
 const moment = require('moment');
 const Helpers = require("../tools/Helpers");
 const models = require("../models");
+const SongService = require('./SongService');
 
 
 class PlaylistService {
@@ -13,6 +14,10 @@ class PlaylistService {
 
     helpers = new Helpers
 
+    
+    constructor() {
+        this.songService = new SongService
+    }
 
     getPlaylists = async (query) => {
 
@@ -94,11 +99,22 @@ class PlaylistService {
         }
         if (typeof song_id === "number" && action === 'include') {
             
+            const song = this.songService.getSong(song_id);
+
+            if (!song) throw new ErrorResponse('Song does not exist.', 404);
+
             await models.SongPlaylist.create({
                 SongId: song_id,
                 PlaylistId: playlist_id,
             })
         } else if (typeof song_id === "number" && action === 'delete') {
+
+            const song = await models.SongPlaylist.findOne({ where: {
+                SongId: song_id,
+                PlaylistId: playlist_id,
+            }})
+
+            if (!song) throw new ErrorResponse('Song does not exist.', 404);
 
             await models.SongPlaylist.destroy({ 
                 where: {
