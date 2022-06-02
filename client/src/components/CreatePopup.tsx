@@ -1,6 +1,7 @@
 import { IonButton, IonButtons, IonInput, IonItem, IonText } from '@ionic/react';
-import { Fragment, useState } from 'react';
+import { Fragment, useContext, useState } from 'react';
 import { createNew } from '../actions/api';
+import ListContext from '../context/ListContext';
 
 
 const CreatePopup: React.FC<any> = ({ pageInfo="", setView }: any) => {
@@ -11,6 +12,8 @@ const CreatePopup: React.FC<any> = ({ pageInfo="", setView }: any) => {
       lastName: '',
       pseudo: ''
     })
+    
+    const { list, setList } = useContext(ListContext);
 
     
     const handleChange = (e: any) => {
@@ -22,13 +25,25 @@ const CreatePopup: React.FC<any> = ({ pageInfo="", setView }: any) => {
       songs: ['title'],
       playlists: ['title']
     }
+    
+    const singular : any= {
+      songs: 'song',
+      playlists: 'playlist',
+      authors: 'author'
+    }
 
     
     const handleCreate = async(e: any) => {
       
       e.preventDefault();
 
-      await createNew(pageInfo, formData);
+      const res = await createNew(pageInfo, formData);
+
+      const element = await res[singular[pageInfo]];
+
+      const values = [...list[pageInfo], element];
+
+      await setList({ ...list, [pageInfo]: values });
 
       setView(false)
 

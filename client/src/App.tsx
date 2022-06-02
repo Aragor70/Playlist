@@ -24,37 +24,58 @@ import './theme/variables.css';
 import './style/style.css';
 import ListingPage from './pages/ListingPage';
 import SinglePage from './pages/SinglePage';
+import { useEffect, useMemo, useState } from 'react';
+import ListContext from './context/ListContext';
 
 setupIonicReact();
 
-const App: React.FC = () => (
-  <IonApp>
-    <IonReactRouter>
-      <IonRouterOutlet>
-        <Route exact path="/">
-          <Home />
-        </Route>
-        <Route exact path="/playlists">
-          <ListingPage />
-        </Route>
-        <Route exact path="/playlists/:id">
-          <SinglePage />
-        </Route>
-        <Route exact path="/authors">
-          <ListingPage />
-        </Route>
-        <Route exact path="/authors/:id">
-          <SinglePage />
-        </Route>
-        <Route exact path="/songs">
-          <ListingPage />
-        </Route>
-        <Route exact path="/songs/:id">
-          <SinglePage />
-        </Route>
-      </IonRouterOutlet>
-    </IonReactRouter>
-  </IonApp>
-);
+const App: React.FC = () => {
+
+  const [list, setList] = useState({})
+
+
+  useEffect(() => {
+    setList({
+      playlists: [],
+      authors: [],
+      songs: []
+    })
+  }, [])
+
+
+  const value = useMemo(() => ({ list, setList }), [list]);
+
+  return (
+    <ListContext.Provider value={value}>
+      <IonApp>
+        <IonReactRouter>
+          <IonRouterOutlet>
+            <Route exact path="/">
+              <Home />
+            </Route>
+            <Route exact path="/playlists">
+              <ListingPage />
+            </Route>
+            <Route exact path="/playlists/:id">
+              <SinglePage />
+            </Route>
+            <Route exact path="/authors">
+              <ListingPage />
+            </Route>
+            <Route exact path="/authors/:id">
+              <SinglePage />
+            </Route>
+            <Route exact path="/songs">
+              <ListingPage />
+            </Route>
+            <Route exact path="/songs/:id">
+              <SinglePage />
+            </Route>
+          </IonRouterOutlet>
+        </IonReactRouter>
+      </IonApp>
+    </ListContext.Provider>
+  );
+}
 
 export default App;

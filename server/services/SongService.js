@@ -140,13 +140,15 @@ class SongController {
 
         if (!song) throw new ErrorResponse('Song does not exist.', 404);
 
-        await models.Song.destroy({ where: { id: song.id } });
         
         await models.SongPlaylist.destroy({ 
             where: {
                 SongId: song.id,
             }
         })
+        
+        await models.Song.destroy({ where: { id: song.id } });
+        
 
         return song
 

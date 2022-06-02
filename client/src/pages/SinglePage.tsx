@@ -1,9 +1,10 @@
 import { IonButton, IonButtons, IonCard, IonCardContent, IonCardHeader, IonCardTitle, IonContent, IonFooter, IonGrid, IonHeader, IonIcon, IonInput, IonItem, IonList, IonPage, IonRow, IonText, IonTitle, IonToolbar } from '@ionic/react';
-import { Fragment, useEffect, useState } from 'react';
+import { Fragment, useContext, useEffect, useState } from 'react';
 import { withRouter } from 'react-router';
 import { deleteOneById, getAll, getOneById, updateById } from '../actions/api';
 import ContentHeadline from '../components/ContentHeadline';
 import PageHeader from '../components/PageHeader';
+import ListContext from '../context/ListContext';
 
 const SinglePage: React.FC = ({ location, match, history }: any) => {
 
@@ -21,62 +22,20 @@ const SinglePage: React.FC = ({ location, match, history }: any) => {
   const [ formData, setFormData ] = useState<any>({})
 
   
+  const { list, setList } = useContext(ListContext);
+  
   const listOf : any= {
     songs: 'playlists',
     playlists: 'songs'
   }
-
-  const buttons: any = {
-    songs: [{ value: 'Include to the playlist', color: 'success', action: () => loadData(openInclude)}, {value: 'Edit', color: 'warning', action: () => setAllowEdit( !allowEdit )}, {value: 'Delete', color: 'danger', action: () => {deleteOneById( pageInfo, { id: match.params.id } ); history.push('/')}}],
-    playlists: [{ value: 'Include a song', color: 'success', action: () => loadData(openInclude)}, {value: 'Edit', color: 'warning', action: () => setAllowEdit( !allowEdit )}, {value: 'Delete', color: 'danger', action: () => {deleteOneById( pageInfo, { id: match.params.id } ); history.push('/')}}],
-    authors: [false, {value: 'Edit', color: 'warning', action: () => setAllowEdit( !allowEdit )}, {value: 'Delete', color: 'danger', action: () => {deleteOneById( pageInfo, { id: match.params.id } ); history.push('/')}}]
+  
+  const singular : any= {
+    songs: 'song',
+    playlists: 'playlist',
+    authors: 'author'
   }
 
-  const includeExcludeSong = async (song_id: any, action: string = '') => {
-    try {
-      
-      setLoadingData(true)
-
-      const payload = { 
-        payload: {
-          id: match.params.id,
-          song_id
-        },
-        action
-      }
-
-      const res = await updateById('playlists', payload)
-
-      const value = res;
-
-      setElement(value.playlist)
-      
-      await loadData(false)
-      
-      setLoadingData(false)
-
-    } catch (err: any) {
-      console.log(err.message)
-    }
-  }
-
-
-  const loadData = async (isOpen: boolean) => {
-    try {
-
-      setOpenInclude(!isOpen)
-
-      const res = await getAll(listOf[pageInfo]);
-
-      const values = res[listOf[pageInfo]];
-      console.log(values)
-      setAllData(values)
-      
-    } catch (err: any) {
-      console.log(err.message)
-    }
-  }
-
+  
   useEffect(() => {
 
     (async () => {
@@ -101,6 +60,73 @@ const SinglePage: React.FC = ({ location, match, history }: any) => {
         setElement(null)
     }
   }, [location.pathname, match.params])
+
+
+  const updateElement = async (payload: any, action: string = '') => {
+    try {
+      
+      setLoadingData(true)
+      const options = { 
+        payload: {
+          id: match.params.id,
+          ...payload
+        },
+        action
+      }
+
+      const res = await updateById(pageInfo, options)
+
+      setElement(res[singular[pageInfo]])
+      setOpenInclude(false)
+      setLoadingData(false)
+    } catch (err: any) {
+      console.log(err.message)
+    }
+  }
+
+  const deleteElement = async () => {
+    try {
+      
+      setLoadingData(true)
+      
+      const res = await deleteOneById(pageInfo, { id: match.params.id })
+
+      const id = await res[singular[pageInfo]]?.id
+
+      const values = await list[pageInfo]?.filter((elem: any) => elem?.id !== id)
+
+      await setList({ ...list, [pageInfo]: values })
+
+      await history.push('/')
+
+      setLoadingData(false)
+    } catch (err: any) {
+      console.log(err.message)
+    }
+  }
+
+  const loadData = async () => {
+    try {
+
+      setOpenInclude(!openInclude)
+
+      const res = await getAll(listOf[pageInfo]);
+
+      const values = res[listOf[pageInfo]];
+
+      setAllData(values)
+      
+    } catch (err: any) {
+      console.log(err.message)
+    }
+  }
+
+  
+  const buttons: any = {
+    songs: [{ value: 'Include to the playlist', color: 'success', action: () => loadData()}, {value: 'Edit', color: 'warning', action: () => setAllowEdit( !allowEdit )}, {value: 'Delete', color: 'danger', action: () =>  deleteElement()}],
+    playlists: [{ value: 'Include a song', color: 'success', action: () => loadData()}, {value: 'Edit', color: 'warning', action: () => setAllowEdit( !allowEdit )}, {value: 'Delete', color: 'danger', action: () => deleteElement()}],
+    authors: [false, {value: 'Edit', color: 'warning', action: () => setAllowEdit( !allowEdit )}, {value: 'Delete', color: 'danger', action: () => deleteElement()}]
+  }
 
   return (
     <IonPage>
@@ -132,7 +158,7 @@ const SinglePage: React.FC = ({ location, match, history }: any) => {
                     (pageInfo === 'playlists' && openInclude) && <Fragment>
 
                       {
-                        allData?.map((element: any) => <IonItem key={element.id}>{element.title}{!!element?.Playlists?.filter((elem: any) => elem?.id === parseInt(match?.params?.id))[0] ? <IonButton onClick={() => includeExcludeSong(element?.id, 'delete')}>Delete</IonButton> : <IonButton onClick={() => includeExcludeSong(element?.id, 'include')}>Add</IonButton>}</IonItem>)
+                        allData?.map((element: any) => <IonItem key={element.id}>{element.title}{!!element?.Playlists?.filter((elem: any) => elem?.id === parseInt(match?.params?.id))[0] ? <IonButton onClick={() => updateElement({ song_id: element?.id }, 'delete')}>Delete</IonButton> : <IonButton onClick={() => updateElement({ song_id: element?.id }, 'include')}>Add</IonButton>}</IonItem>)
                       }
 
                     </Fragment>
@@ -141,7 +167,7 @@ const SinglePage: React.FC = ({ location, match, history }: any) => {
                     (pageInfo === 'songs' && openInclude) && <Fragment>
 
                       {
-                        allData?.map((element: any) => <IonItem key={element.id}>{element.title}{!!element?.Songs?.filter((elem: any) => elem?.id === parseInt(match?.params?.id))[0] ? <IonButton onClick={() => includeExcludeSong(element?.id, 'delete')}>Delete</IonButton> : <IonButton onClick={() => includeExcludeSong(element?.id, 'include')}>Add</IonButton>}</IonItem>)
+                        allData?.map((element: any) => <IonItem key={element.id}>{element.title}{!!element?.Songs?.filter((elem: any) => elem?.id === parseInt(match?.params?.id))[0] ? <IonButton onClick={() => updateElement({ song_id: element?.id }, 'delete')}>Delete</IonButton> : <IonButton onClick={() => updateElement({ song_id: element?.id }, 'include')}>Add</IonButton>}</IonItem>)
                       }
 
                     </Fragment>
@@ -164,7 +190,7 @@ const SinglePage: React.FC = ({ location, match, history }: any) => {
                             <IonInput type="text" name="firstName" placeholder="firstName" onIonChange={(e: any) => setFormData({ ...formData, [e.target.name]: e.target.value })} />
                             <IonInput type="text" name="lastName" placeholder="lastName" onIonChange={(e: any) => setFormData({ ...formData, [e.target.name]: e.target.value })} />
                             <IonInput type="text" name="pseudo" placeholder="pseudo" onIonChange={(e: any) => setFormData({ ...formData, [e.target.name]: e.target.value })} />
-                            <IonButton onClick={() => {updateById(pageInfo, {payload: {id: match.params.id, ...formData}}); setAllowEdit(false)}}>submit</IonButton>
+                            <IonButton onClick={() => {updateElement({id: match.params.id, ...formData}); setAllowEdit(false)}}>submit</IonButton>
                           </div> : <Fragment>
                             {element.firstName} {element.pseudo} {element.lastName} 
                           </Fragment>
@@ -174,7 +200,7 @@ const SinglePage: React.FC = ({ location, match, history }: any) => {
                         {
                           allowEdit ? <div>
                             <IonInput type="text" name="title" onIonChange={(e: any) => setFormData({ ...formData, [e.target.name]: e.target.value })} />
-                            <IonButton onClick={() => {updateById(pageInfo, {payload: {id: match.params.id, ...formData}}); setAllowEdit(false)}}>submit</IonButton>
+                            <IonButton onClick={() => {updateElement({id: match.params.id, ...formData}); setAllowEdit(false)}}>submit</IonButton>
                           </div> : element.title
                         }
                       </Fragment>

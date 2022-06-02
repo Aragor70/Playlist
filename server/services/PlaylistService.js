@@ -139,13 +139,15 @@ class PlaylistService {
 
         if (!playlist) throw new ErrorResponse('Playlist does not exist.', 404);
 
-        await models.Playlist.destroy({ where: { id: playlist.id } });
         
         await models.SongPlaylist.destroy({ 
             where: {
                 PlaylistId: playlist.id,
             }
         })
+        
+        await models.Playlist.destroy({ where: { id: playlist.id } });
+        
 
         return playlist
 

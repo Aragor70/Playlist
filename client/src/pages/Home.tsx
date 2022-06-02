@@ -1,22 +1,53 @@
 import { IonButton, IonButtons, IonCard, IonCardContent, IonCol, IonContent, IonFooter, IonGrid, IonHeader, IonIcon, IonItem, IonList, IonPage, IonRow, IonText, IonTitle, IonToolbar } from '@ionic/react';
 import { listOutline, musicalNotesOutline, peopleOutline } from 'ionicons/icons';
-import { useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { withRouter } from 'react-router';
+import { getAll } from '../actions/api';
 import CreatePopup from '../components/CreatePopup';
 import EmptyRow from '../components/EmptyRow';
 import Filter from '../components/Filter';
 import PageHeader from '../components/PageHeader';
 import Row from '../components/Row';
+import TableHeadline from '../components/TableHeadline';
+import ListContext from '../context/ListContext';
 
 const Home: React.FC = ({ history }: any) => {
 
-  const [ playlists, setPlaylists ] = useState([])
-  const [ authors, setAuthors ] = useState([])
-  const [ songs, setSongs ] = useState([])
+  
   const [ createView, setCreateView ] = useState('')
 
   const [ loadingData, setLoadingData ] = useState(false)
+  
+  const { list, setList } = useContext(ListContext);
+  
+  
 
+  useEffect(() => {
+
+    (async () => {
+        try {
+
+            setLoadingData(true)
+
+            const res1 = await getAll('playlists');
+            const res2 = await getAll('authors');
+            const res3 = await getAll('songs');
+            
+            setList({ 
+              playlists: res1.playlists,
+              authors: res2.authors,
+              songs: res3.songs
+            })
+
+            setLoadingData(false)
+
+        } catch (err: any) {
+            console.log(err.message)
+        }
+
+    })()
+
+}, [])
 
   return (
     <IonPage>
@@ -49,22 +80,13 @@ const Home: React.FC = ({ history }: any) => {
                 </IonItem>
                 
                 <IonGrid>
-                <Filter setArray={setPlaylists} setLoading={setLoadingData} pageInfo={'playlists'} />
-                <IonRow className='l-grey-bcg'>
-                  <IonCol>
-                      icon
-                  </IonCol>
-                  <IonCol>
-                      title
-                  </IonCol>
-                  <IonCol>
-                      created at
-                  </IonCol>
-                  <IonCol>Show more</IonCol>
-              </IonRow>
+                <Filter setLoading={setLoadingData} pageInfo={'playlists'} />
+                
+                
+              <TableHeadline />
               
                 {
-                  loadingData ? <EmptyRow element={{ title: "loading..." }} /> : !!playlists.length ? playlists.slice(0, 5).map((element: any, index: number) => <Row key={element.id} element={element} pageInfo={'playlists'} history={history} />) :  <EmptyRow element={{ title: "No playlists." }} />
+                  loadingData ? <EmptyRow element={{ title: "loading..." }} /> : !!list?.playlists?.length ? list?.playlists?.slice(0, 5)?.map((element: any, index: number) => <Row key={element.id} element={element} pageInfo={'playlists'} history={history} />) :  <EmptyRow element={{ title: "No playlists." }} />
                 }
 
                 </IonGrid>
@@ -92,22 +114,12 @@ const Home: React.FC = ({ history }: any) => {
           
           <IonGrid>
 
-          <Filter setArray={setAuthors} setLoading={setLoadingData} pageInfo={'authors'} />
-          <IonRow className='l-grey-bcg'>
-            <IonCol>
-                icon
-            </IonCol>
-            <IonCol>
-                title
-            </IonCol>
-            <IonCol>
-                created at
-            </IonCol>
-            <IonCol>Show more</IonCol>
-          </IonRow>
+          <Filter setLoading={setLoadingData} pageInfo={'authors'} />
+          
+          <TableHeadline />
 
           {
-            loadingData ? <EmptyRow element={{ title: "loading..." }} /> : !!authors.length ? authors.slice(0, 5).map((element: any, index: number) => <Row key={element.id} element={element} pageInfo={'authors'} history={history} />) :  <EmptyRow element={{ title: "No authors." }} />
+            loadingData ? <EmptyRow element={{ title: "loading..." }} /> : !!list?.authors?.length ? list?.authors?.slice(0, 5)?.map((element: any, index: number) => <Row key={element.id} element={element} pageInfo={'authors'} history={history} />) :  <EmptyRow element={{ title: "No authors." }} />
           }
 
           </IonGrid>
@@ -133,22 +145,13 @@ const Home: React.FC = ({ history }: any) => {
           
           <IonGrid>
 
-          <Filter setArray={setSongs} setLoading={setLoadingData} pageInfo={'songs'} />
-          <IonRow className='l-grey-bcg'>
-            <IonCol>
-                icon
-            </IonCol>
-            <IonCol>
-                title
-            </IonCol>
-            <IonCol>
-                created at
-            </IonCol>
-            <IonCol>Show more</IonCol>
-        </IonRow>
+          <Filter setLoading={setLoadingData} pageInfo={'songs'} />
+          
+          
+          <TableHeadline />
 
           {
-            loadingData ? <EmptyRow element={{ title: "loading..." }} /> : !!songs.length ? songs.slice(0, 5).map((element: any, index: number) => <Row key={element.id} element={element} pageInfo={'songs'} history={history} />) :  <EmptyRow element={{ title: "No songs." }} />
+            loadingData ? <EmptyRow element={{ title: "loading..." }} /> : !!list?.songs?.length ? list?.songs?.slice(0, 5)?.map((element: any, index: number) => <Row key={element.id} element={element} pageInfo={'songs'} history={history} />) :  <EmptyRow element={{ title: "No songs." }} />
           }
 
           </IonGrid>

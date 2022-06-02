@@ -1,13 +1,15 @@
 import { IonCol, IonGrid, IonInput, IonLabel, IonRow, IonText } from '@ionic/react';
-import { Fragment, useEffect, useState } from 'react';
+import { Fragment, useContext, useEffect, useState } from 'react';
 import { getAll } from '../actions/api';
+import ListContext from '../context/ListContext';
 
 interface ContainerProps { 
-    setArray: any, setLoading: any, pageInfo: string
+    setLoading: any, pageInfo: string
 }
 
-const Filter: React.FC<ContainerProps> = ({ setArray, setLoading, pageInfo = '' }) => {
+const Filter: React.FC<ContainerProps> = ({ setLoading, pageInfo = '' }) => {
 
+    const { list, setList } = useContext(ListContext);
 
     const [formData, setFormData] = useState({
         phrase: '',
@@ -19,18 +21,20 @@ const Filter: React.FC<ContainerProps> = ({ setArray, setLoading, pageInfo = '' 
         setFormData({...formData, [e.target.name]: e.target.value})
     }
 
+
+
     useEffect(() => {
 
         (async () => {
             try {
 
-                if (!pageInfo) return
+                if (!pageInfo || !list) return
 
                 setLoading(true)
     
                 const res = await getAll(pageInfo, formData);
                 
-                setArray(res[pageInfo])
+                setList({ ...list, [pageInfo]: res[pageInfo] })
                 setLoading(false)
 
             } catch (err: any) {
